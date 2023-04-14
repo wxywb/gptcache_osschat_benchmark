@@ -2,6 +2,7 @@ import time
 import sys
 import os
 import json
+import ipdb
 
 from gptcache.adapter import openai
 from gptcache import cache, Config
@@ -46,7 +47,7 @@ def config3(embedding_f, dm):
     cache.init(
         embedding_func=embedding_f.to_embeddings,
         data_manager=dm,
-        similarity_evaluation=KReciprocalEvaluation(dm.v),
+        similarity_evaluation=KReciprocalEvaluation(dm.v, top_k = 2),
         config=Config(similarity_threshold=0.5),
     )
 
@@ -78,6 +79,8 @@ def run():
 
     if not has_data:
         cache.import_data(questions=cquestions, answers=canswers)
+    #for cq, ca in zip(cquestions, canswers):
+    #    cache.import_data(questions=[cq], answers=[ca])
 
     failed = 0 
     tp = 0  
